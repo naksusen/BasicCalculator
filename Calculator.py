@@ -2,261 +2,358 @@ import math
 
 import flet as ft
 
-def main(page: ft.page):
+def main(page: ft.Page):
     page.title = "Calculator"
     page.window_height = 580
     page.window_width = 460
     page.bgcolor = "#ffc8ee"
     page.window_resizable = False
-    txtcol = ft.Column()
-    displaycol = ft.Column(scroll=ft.ScrollMode.AUTO)
+    page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
+    page.vertical_alignment = ft.MainAxisAlignment.CENTER
 
-    ft.Text("Size 10", size=10),
-    txt = ft.TextField(
-        label="Calculator",
-        border=ft.InputBorder.NONE,
-        cursor_color=ft.colors.PINK_200,
-        bgcolor='#dbe7ea',
-        color='#6e4229',
-        filled=True,
-        focused_bgcolor='#dbe7ea',
-        border_radius=20,
-        border_color='#5b2914',
-        focused_border_color='#6e4229',
-        prefix_icon=ft.icons.CALCULATE_ROUNDED,
-        text_style=ft.TextStyle(size=30, color="#6e4229",),
-        disabled=True,
-    )
-    #page.add(txt)
-    txtcol.controls.append(txt)
+    # State variable to control which screen to show
+    show_calculator = False
 
-    def keyboard(e):
+    def show_calculator_ui():
+        txtcol = ft.Column()
+        displaycol = ft.Column(scroll=ft.ScrollMode.AUTO)
 
-        data = e.control.data
-        if data in ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", ".", "+", "-", "/", "*", "(", ")"]:
-            txt.value = str(txt.value) + str(data)
-            page.update()
-        elif data == "=":
-            txt.value=str(eval(txt.value))
-            page.update()
-        elif data == "e":
-            txt.value=txt.value[:-1]
-            page.update()
-        elif data=="c":
-            txt.value=""
-            page.update()
-        elif data=="√":
-            txt.value=str(math.sqrt(eval(txt.value)))
-            page.update()
-        elif data=="cos0":
-            txt.value= str(math.cos(math.radians(eval(txt.value))))
-            page.update()
-        elif data=="tan0":
-            txt.value= str(math.tan(math.radians(eval(txt.value))))
-            page.update()
-        elif data=="sin0":
-            txt.value= str(math.sin(math.radians(eval(txt.value))))
-            page.update()
-        elif data == "cosh":
-            txt.value = str(math.cosh(math.radians(eval(txt.value))))
-            page.update()
-        elif data == "tanh":
-            txt.value = str(math.tanh(math.radians(eval(txt.value))))
-            page.update()
-        elif data == "sinh":
-            txt.value = str(math.sinh(math.radians(eval(txt.value))))
-            page.update()
-        elif data=='x\u00B2':
-            txt.value=str(eval(txt.value)**2)
-            page.update()
+        # Add a title at the top
+        title = ft.Text(
+            "Scientific Calculator",
+            size=28,
+            weight=ft.FontWeight.BOLD,
+            color="#6e4229",
+            text_align=ft.TextAlign.CENTER,
+        )
 
-    btnc = ft.ElevatedButton(
-        text="C", bgcolor="#FFC90E", color="#6e4229", data="c", on_click=keyboard,
-        style=ft.ButtonStyle(shape=ft.RoundedRectangleBorder(radius=40))
-    )
-    btndel = ft.ElevatedButton(
-        text="<", bgcolor="#bfe8fc", color="#6e4229", data="e", on_click=keyboard,
-        style=ft.ButtonStyle(shape=ft.ContinuousRectangleBorder(radius=60))
-    )
-    btnopen = ft.ElevatedButton(
-        text="(", bgcolor="#bfe8fc", color="#6e4229", data="(", on_click=keyboard,
-        style=ft.ButtonStyle(shape=ft.ContinuousRectangleBorder(radius=60))
-    )
-    btnclose = ft.ElevatedButton(
-        text=")", bgcolor="#bfe8fc", color="#6e4229", data=")", on_click=keyboard,
-        style=ft.ButtonStyle(shape=ft.ContinuousRectangleBorder(radius=60))
-    )
+        txt = ft.TextField(
+            label="Calculator",
+            border=ft.InputBorder.NONE,
+            cursor_color=ft.colors.PINK_200,
+            bgcolor=None,
+            color='#6e4229',
+            filled=True,
+            focused_bgcolor=None,
+            border_radius=20,
+            border_color='#5b2914',
+            focused_border_color='#6e4229',
+            prefix_icon=ft.icons.CALCULATE_ROUNDED,
+            text_style=ft.TextStyle(size=30, color="#6e4229",),
+            disabled=True,
+        )
+        txt_container = ft.Container(
+            txt,
+            border_radius=20,
+            padding=ft.padding.only(left=8, right=8, top=4, bottom=4),
+            bgcolor="#dbe7ea",
+            border=ft.border.all(2, ft.colors.with_opacity(0.15, ft.colors.BLACK)),
+            gradient=None
+        )
+        txtcol.controls.append(txt_container)
 
-    r1 =ft.Row(
-        controls=[btnc,btndel,btnopen, btnclose],
-        alignment=ft.MainAxisAlignment.SPACE_BETWEEN.SPACE_EVENLY
-    )
-    #page.add(r1)
-    displaycol.controls.append(r1)
+        def keyboard(e):
+            data = e.control.data
+            if data in ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", ".", "+", "-", "/", "*", "(", ")"]:
+                txt.value = str(txt.value) + str(data)
+                page.update()
+            elif data == "=":
+                txt.value=str(eval(txt.value))
+                page.update()
+            elif data == "e":
+                txt.value=txt.value[:-1]
+                page.update()
+            elif data=="c":
+                txt.value=""
+                page.update()
+            elif data=="√":
+                txt.value=str(math.sqrt(eval(txt.value)))
+                page.update()
+            elif data=="∛":
+                txt.value=str(eval(txt.value) ** (1/3))
+                page.update()
+            elif data=="cos0":
+                txt.value= str(math.cos(math.radians(eval(txt.value))))
+                page.update()
+            elif data=="tan0":
+                txt.value= str(math.tan(math.radians(eval(txt.value))))
+                page.update()
+            elif data=="sin0":
+                txt.value= str(math.sin(math.radians(eval(txt.value))))
+                page.update()
+            elif data == "cosh":
+                txt.value = str(math.cosh(math.radians(eval(txt.value))))
+                page.update()
+            elif data == "tanh":
+                txt.value = str(math.tanh(math.radians(eval(txt.value))))
+                page.update()
+            elif data == "sinh":
+                txt.value = str(math.sinh(math.radians(eval(txt.value))))
+                page.update()
+            elif data=='x\u00B2':
+                txt.value=str(eval(txt.value)**2)
+                page.update()
+            elif data == "^":
+                txt.value = str(txt.value) + "**"
+                page.update()
+            elif data == "10^x":
+                txt.value = str(10 ** eval(txt.value))
+                page.update()
+            elif data == "e^x":
+                txt.value = str(math.exp(eval(txt.value)))
+                page.update()
+            elif data == "log":
+                txt.value = str(math.log10(eval(txt.value)))
+                page.update()
+            elif data == "ln":
+                txt.value = str(math.log(eval(txt.value)))
+                page.update()
+            elif data == "π":
+                txt.value = str(txt.value) + str(math.pi)
+                page.update()
+            elif data == "e_const":
+                txt.value = str(txt.value) + str(math.e)
+                page.update()
+            elif data == "sin⁻¹":
+                txt.value = str(math.degrees(math.asin(eval(txt.value))))
+                page.update()
+            elif data == "cos⁻¹":
+                txt.value = str(math.degrees(math.acos(eval(txt.value))))
+                page.update()
+            elif data == "tan⁻¹":
+                txt.value = str(math.degrees(math.atan(eval(txt.value))))
+                page.update()
+            elif data == "!":
+                txt.value = str(math.factorial(int(eval(txt.value))))
+                page.update()
+            elif data == "|x|":
+                txt.value = str(abs(eval(txt.value)))
+                page.update()
+            elif data == "1/x":
+                txt.value = str(1 / eval(txt.value))
+                page.update()
+            elif data == "%":
+                txt.value = str(eval(txt.value) / 100)
+                page.update()
 
-    btnsqrt = ft.ElevatedButton(
-        text="√", bgcolor="#bfe8fc", color="#6e4229", data="√", on_click=keyboard,
-        style=ft.ButtonStyle(shape=ft.ContinuousRectangleBorder(radius=60))
-    )
-    btncos = ft.ElevatedButton(
-        text="cos0", bgcolor="#bfe8fc", color="#6e4229", data="cos0", on_click=keyboard,
-        style=ft.ButtonStyle(shape=ft.ContinuousRectangleBorder(radius=60))
-    )
-    btntan = ft.ElevatedButton(
-        text="tan0", bgcolor="#bfe8fc", color="#6e4229", data="tan0", on_click=keyboard,
-        style=ft.ButtonStyle(shape=ft.ContinuousRectangleBorder(radius=60))
-    )
-    btnsin = ft.ElevatedButton(
-        text="sin0", bgcolor="#bfe8fc", color="#6e4229", data="sin0", on_click=keyboard,
-        style=ft.ButtonStyle(shape=ft.ContinuousRectangleBorder(radius=60))
-    )
-    r6 = ft.Row(
-        controls=[btncos, btntan, btnsin, btnsqrt],
-        alignment=ft.MainAxisAlignment.SPACE_BETWEEN.SPACE_EVENLY
-    )
-    # page.add(r6)
-    displaycol.controls.append(r6)
+        def create_button(text, data, bgcolor="#bfe8fc"):
+            return ft.ElevatedButton(
+                text=text,
+                bgcolor=bgcolor,
+                color="#6e4229",
+                data=data,
+                on_click=keyboard,
+                style=ft.ButtonStyle(
+                    shape=ft.ContinuousRectangleBorder(radius=60),
+                    shadow_color=ft.colors.BLACK45,
+                    elevation=8,
+                    animation_duration=300,
+                    overlay_color=ft.colors.with_opacity(0.1, ft.colors.WHITE),
+                ),
+            )
 
-    btncosh = ft.ElevatedButton(
-        text="cosh", bgcolor="#bfe8fc", color="#6e4229", data="cosh", on_click=keyboard,
-        style=ft.ButtonStyle(shape=ft.ContinuousRectangleBorder(radius=60))
-    )
-    btntanh = ft.ElevatedButton(
-        text="tanh", bgcolor="#bfe8fc", color="#6e4229", data="tanh", on_click=keyboard,
-        style=ft.ButtonStyle(shape=ft.ContinuousRectangleBorder(radius=60))
-    )
-    btnsinh = ft.ElevatedButton(
-        text="sinh", bgcolor="#bfe8fc", color="#6e4229", data="sinh", on_click=keyboard,
-        style=ft.ButtonStyle(shape=ft.ContinuousRectangleBorder(radius=60))
-    )
-    btndiv = ft.ElevatedButton(
-        text="/", bgcolor="#bfe8fc", color="#6e4229", data="/", on_click=keyboard,
-        style=ft.ButtonStyle(shape=ft.ContinuousRectangleBorder(radius=60))
-    )
-    r7 = ft.Row(
-        controls=[btncosh, btntanh, btnsinh, btndiv],
-        alignment=ft.MainAxisAlignment.SPACE_BETWEEN.SPACE_EVENLY
-    )
-    # page.add(r7)
-    displaycol.controls.append(r7)
+        # --- Scientific Calculator Layout ---
+        # Top row: inv, pi, e, C, del
+        r1 = ft.Row(
+            controls=[
+                create_button("1/x", "1/x"),
+                create_button("π", "π"),
+                create_button("e", "e_const"),
+                create_button("C", "c", "#FFC90E"),
+                create_button("<", "e")
+            ],
+            alignment=ft.MainAxisAlignment.SPACE_BETWEEN.SPACE_EVENLY
+        )
+        displaycol.controls.clear()
+        displaycol.controls.append(r1)
 
-    btn7 = ft.ElevatedButton(
-        text="7", bgcolor="#bfe8fc", color="#6e4229", data="7", on_click=keyboard,
-        style=ft.ButtonStyle(shape=ft.ContinuousRectangleBorder(radius=60))
-    )
-    btn8 = ft.ElevatedButton(
-        text="8", bgcolor="#bfe8fc", color="#6e4229", data="8", on_click=keyboard,
-        style=ft.ButtonStyle(shape=ft.ContinuousRectangleBorder(radius=60))
-    )
-    btn9 = ft.ElevatedButton(
-        text="9", bgcolor="#bfe8fc", color="#6e4229", data="9", on_click=keyboard,
-        style=ft.ButtonStyle(shape=ft.ContinuousRectangleBorder(radius=60))
-    )
-    btnmulti = ft.ElevatedButton(
-        text="*", bgcolor="#bfe8fc", color="#6e4229", data="*", on_click=keyboard,
-        style=ft.ButtonStyle(shape=ft.ContinuousRectangleBorder(radius=60))
-    )
+        # Second row: x^y, x², √, ∛, %
+        r2 = ft.Row(
+            controls=[
+                create_button("xʸ", "^"),
+                create_button("x²", "x²"),
+                create_button("√", "√"),
+                create_button("∛", "∛"),
+                create_button("%", "%")
+            ],
+            alignment=ft.MainAxisAlignment.SPACE_BETWEEN.SPACE_EVENLY
+        )
+        displaycol.controls.append(r2)
 
+        # Third row: ln, log, eˣ, 10ˣ, !
+        r3 = ft.Row(
+            controls=[
+                create_button("ln", "ln"),
+                create_button("log", "log"),
+                create_button("eˣ", "e^x"),
+                create_button("10ˣ", "10^x"),
+                create_button("n!", "!")
+            ],
+            alignment=ft.MainAxisAlignment.SPACE_BETWEEN.SPACE_EVENLY
+        )
+        displaycol.controls.append(r3)
 
-    r2 = ft.Row(
-        controls=[btn7, btn8, btn9, btnmulti],
-        alignment=ft.MainAxisAlignment.SPACE_BETWEEN.SPACE_EVENLY
-    )
-    #page.add(r2)
-    displaycol.controls.append(r2)
+        # Fourth row: sin, cos, tan, sin⁻¹, cos⁻¹, tan⁻¹
+        r4 = ft.Row(
+            controls=[
+                create_button("sin", "sin0"),
+                create_button("cos", "cos0"),
+                create_button("tan", "tan0"),
+                create_button("sin⁻¹", "sin⁻¹"),
+                create_button("cos⁻¹", "cos⁻¹"),
+                create_button("tan⁻¹", "tan⁻¹")
+            ],
+            alignment=ft.MainAxisAlignment.SPACE_BETWEEN.SPACE_EVENLY
+        )
+        displaycol.controls.append(r4)
 
-    btn4 = ft.ElevatedButton(
-        text="4", bgcolor="#bfe8fc", color="#6e4229", data="4", on_click=keyboard,
-        style=ft.ButtonStyle(shape=ft.ContinuousRectangleBorder(radius=60))
-    )
-    btn5 = ft.ElevatedButton(
-        text="5", bgcolor="#bfe8fc", color="#6e4229", data="5", on_click=keyboard,
-        style=ft.ButtonStyle(shape=ft.ContinuousRectangleBorder(radius=60))
-    )
-    btn6 = ft.ElevatedButton(
-        text="6", bgcolor="#bfe8fc", color="#6e4229", data="6", on_click=keyboard,
-        style=ft.ButtonStyle(shape=ft.ContinuousRectangleBorder(radius=60))
-    )
-    btnsub = ft.ElevatedButton(
-        text="-", bgcolor="#bfe8fc", color="#6e4229", data="-", on_click=keyboard,
-        style=ft.ButtonStyle(shape=ft.ContinuousRectangleBorder(radius=60))
-    )
+        # Fifth row: sinh, cosh, tanh, |x|, (, )
+        r5 = ft.Row(
+            controls=[
+                create_button("sinh", "sinh"),
+                create_button("cosh", "cosh"),
+                create_button("tanh", "tanh"),
+                create_button("|x|", "|x|"),
+                create_button("(", "("),
+                create_button(")", ")")
+            ],
+            alignment=ft.MainAxisAlignment.SPACE_BETWEEN.SPACE_EVENLY
+        )
+        displaycol.controls.append(r5)
 
-    r3 = ft.Row(
-        controls=[btn4, btn5, btn6, btnsub],
-        alignment=ft.MainAxisAlignment.SPACE_BETWEEN.SPACE_EVENLY
-    )
-    #page.add(r3)
-    displaycol.controls.append(r3)
+        # Number and operator rows (standard layout)
+        r6 = ft.Row(
+            controls=[
+                create_button("7", "7"),
+                create_button("8", "8"),
+                create_button("9", "9"),
+                create_button("/", "/")
+            ],
+            alignment=ft.MainAxisAlignment.SPACE_BETWEEN.SPACE_EVENLY
+        )
+        displaycol.controls.append(r6)
 
-    btn1 = ft.ElevatedButton(
-        text="1", bgcolor="#bfe8fc", color="#6e4229", data="1", on_click=keyboard,
-        style=ft.ButtonStyle(shape=ft.ContinuousRectangleBorder(radius=60))
-    )
-    btn2 = ft.ElevatedButton(
-        text="2", bgcolor="#bfe8fc", color="#6e4229", data="2", on_click=keyboard,
-        style=ft.ButtonStyle(shape=ft.ContinuousRectangleBorder(radius=60))
-    )
-    btn3 = ft.ElevatedButton(
-        text="3", bgcolor="#bfe8fc", color="#6e4229", data="3", on_click=keyboard,
-        style=ft.ButtonStyle(shape=ft.ContinuousRectangleBorder(radius=60))
-    )
-    btnadd = ft.ElevatedButton(
-        text="+", bgcolor="#bfe8fc", color="#6e4229", data="+", on_click=keyboard,
-        style=ft.ButtonStyle(shape=ft.ContinuousRectangleBorder(radius=60))
-    )
+        r7 = ft.Row(
+            controls=[
+                create_button("4", "4"),
+                create_button("5", "5"),
+                create_button("6", "6"),
+                create_button("*", "*")
+            ],
+            alignment=ft.MainAxisAlignment.SPACE_BETWEEN.SPACE_EVENLY
+        )
+        displaycol.controls.append(r7)
 
+        r8 = ft.Row(
+            controls=[
+                create_button("1", "1"),
+                create_button("2", "2"),
+                create_button("3", "3"),
+                create_button("-", "-")
+            ],
+            alignment=ft.MainAxisAlignment.SPACE_BETWEEN.SPACE_EVENLY
+        )
+        displaycol.controls.append(r8)
 
-    r4 = ft.Row(
-        controls=[btn1, btn2, btn3, btnadd],
-        alignment=ft.MainAxisAlignment.SPACE_BETWEEN.SPACE_EVENLY
-    )
-    #page.add(r4)
-    displaycol.controls.append(r4)
+        r9 = ft.Row(
+            controls=[
+                create_button("0", "0"),
+                create_button(".", "."),
+                create_button("=", "=", "#FFC90E"),
+                create_button("+", "+")
+            ],
+            alignment=ft.MainAxisAlignment.SPACE_BETWEEN.SPACE_EVENLY
+        )
+        displaycol.controls.append(r9)
 
+        displaycon = ft.Container(
+            ft.Column(
+                [title, txtcol, displaycol],
+                alignment=ft.MainAxisAlignment.SPACE_EVENLY
+            ),
+            gradient=ft.LinearGradient(
+                begin=ft.alignment.top_center,
+                end=ft.alignment.bottom_center,
+                colors=[ft.colors.PINK_200, ft.colors.PINK_100],
+            ),
+            expand=False,
+            width=500,
+            height=550,
+            margin=10,
+            padding=29,
+            border_radius=20,
+            alignment=ft.alignment.center,
+            shadow=ft.BoxShadow(
+                spread_radius=1,
+                blur_radius=25,
+                color=ft.colors.BLACK45,
+                offset=ft.Offset(5, 5),
+            ),
+            border=ft.border.all(2, ft.colors.with_opacity(0.1, ft.colors.WHITE))
+        )
+        page.controls.clear()
+        page.add(displaycon)
 
-    btn0 = ft.ElevatedButton(
-        text="0", bgcolor="#bfe8fc", color="#6e4229", data="0", on_click=keyboard,
-        style=ft.ButtonStyle(shape=ft.ContinuousRectangleBorder(radius=60))
-    )
-    btndot = ft.ElevatedButton(
-        text=".", bgcolor="#bfe8fc", color="#6e4229", data=".", on_click=keyboard,
-        style=ft.ButtonStyle(shape=ft.ContinuousRectangleBorder(radius=60))
-    )
-    btneq = ft.ElevatedButton(
-        text="=", bgcolor="#FFC90E", color="#6e4229", data="=", on_click=keyboard,
-        style=ft.ButtonStyle(shape=ft.ContinuousRectangleBorder(radius=60))
-    )
-    btns2 = ft.ElevatedButton(
-            text="x\u00B2", bgcolor="#bfe8fc", color="#6e4229", data="x\u00B2", on_click=keyboard,
-        style=ft.ButtonStyle(shape=ft.ContinuousRectangleBorder(radius=60))
-    )
-    r5 = ft.Row(
-        controls=[btn0, btndot, btns2, btneq],
-        alignment=ft.MainAxisAlignment.SPACE_BETWEEN.SPACE_EVENLY
-    )
-    #page.add(r5)
-    displaycol.controls.append(r5)
+    def start_click(e):
+        nonlocal show_calculator
+        show_calculator = True
+        show_calculator_ui()
+        page.update()
 
-
-    displaycon = ft.Container(
-        ft.Column(
-            [txtcol, displaycol], alignment=ft.MainAxisAlignment.SPACE_EVENLY),
-        gradient=ft.LinearGradient(
-            begin=ft.alignment.top_center,
-            end=ft.alignment.bottom_center,
-            colors=[ft.colors.PINK_200],
-        ),
-
-        expand=False,
-        width=500,
-        height=550,
-        margin=10,
-        padding=29,
-        border_radius=10,
-        alignment=ft.alignment.top_center,
-    )
-    page.add(displaycon)
-
+    if not show_calculator:
+        # Show the start page
+        engaging_text = ft.Text(
+            "Ready to crunch numbers? Start your scientific journey!",
+            size=26,
+            weight=ft.FontWeight.BOLD,
+            color="#d72660",
+            text_align=ft.TextAlign.CENTER,
+            italic=True,
+        )
+        start_btn = ft.ElevatedButton(
+            text="Start",
+            bgcolor="#FFC90E",
+            color="#6e4229",
+            style=ft.ButtonStyle(
+                shape=ft.RoundedRectangleBorder(radius=40),
+                padding=ft.padding.symmetric(horizontal=40, vertical=20),
+                text_style=ft.TextStyle(size=22, weight=ft.FontWeight.BOLD)
+            ),
+            width=220,
+            height=60,
+            on_click=start_click
+        )
+        start_col = ft.Column([
+            engaging_text,
+            ft.Container(height=40),
+            start_btn
+        ], alignment=ft.MainAxisAlignment.CENTER, horizontal_alignment=ft.CrossAxisAlignment.CENTER, expand=True)
+        start_con = ft.Container(
+            start_col,
+            width=500,
+            height=550,
+            margin=10,
+            padding=29,
+            border_radius=20,
+            alignment=ft.alignment.center,
+            gradient=ft.LinearGradient(
+                begin=ft.alignment.top_center,
+                end=ft.alignment.bottom_center,
+                colors=[ft.colors.PINK_200, ft.colors.PINK_100],
+            ),
+            border=ft.border.all(2, ft.colors.with_opacity(0.1, ft.colors.WHITE))
+        )
+        copyright_text = ft.Text(
+            "© 2025 Janet. All rights reserved.",
+            size=14,
+            color="#6e4229",
+            text_align=ft.TextAlign.CENTER,
+            italic=True,
+            opacity=0.7,
+        )
+        page.add(start_con)
+        page.add(copyright_text)
+    else:
+        show_calculator_ui()
 
 ft.app(target=main)
